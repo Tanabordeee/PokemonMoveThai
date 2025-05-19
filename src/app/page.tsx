@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AxiosResponse } from "axios";
 import SearchBar from "./searchbar";
 import axios from "axios";
@@ -58,7 +58,9 @@ export default function Home() {
   const [load, setLoad] = useState(true);
   const [totalPages, setTotalPages] = useState<number | null>(null);
   const [moveData, setMoveData] = useState<PokemonMove[]>([]);
-
+  const [isPlaying, setIsPlaying] = useState(false);
+  const clickSound = useRef<HTMLAudioElement | null>(null);
+  const musicpokemonSound = useRef<HTMLAudioElement | null>(null);
   const apiBase = process.env.NEXT_PUBLIC_API_URL as string;
 
   const getTypeColor = (type: string) => {
@@ -86,6 +88,20 @@ export default function Home() {
     return typeColors[type.toLowerCase()] || "bg-gray-200 text-gray-800";
   };
 
+
+  const playMusic = () => {
+    clickSound.current?.play()
+    if (musicpokemonSound.current) {
+      if (musicpokemonSound.current.paused) {
+        musicpokemonSound.current.volume = 0.1;
+        musicpokemonSound.current.play();
+        setIsPlaying(true);
+      } else {
+        musicpokemonSound.current.pause();
+        setIsPlaying(false);
+      }
+    }
+  };
   const pokemonMoveData = async () => {
     try {
       const apiUrl = `${apiBase}pokemonmoves?page=${page}&size=${size}`;
@@ -103,7 +119,6 @@ export default function Home() {
       }
     }
   };
-
   useEffect(() => {
     pokemonMoveData();
   }, [page, apiBase]);
@@ -112,6 +127,9 @@ export default function Home() {
   },[page])
   return (
     <div className="min-h-screen flex flex-col items-center bg-slate-50 py-10 px-4">
+      <img className="cursor-pointer  fixed bottom-10 right-10 hidden md:block" src={isPlaying ? "/pokemonsing.gif" : "/pokemonsing.png"} onClick={()=>playMusic()} alt="" />
+      <audio ref={musicpokemonSound} src="/pokemonmusic.mp3" loop preload="auto"></audio>
+      <audio ref={clickSound} src="/mouseclick.mp3" preload="auto"></audio>
       <Card className="w-full max-w-5xl shadow-sm bg-white">
         <div className="p-6">
           <>
@@ -212,8 +230,8 @@ export default function Home() {
                   (totalPages === null || page + 1 < totalPages) && (
                     <div className="flex justify-center items-center w-full">
                       <button
-                        onClick={() => { setPage((prev) => prev + 1);}}
-                        className="mt-6 px-4 py-2 bg-black text-white w-full rounded hover:bg-gray-700 transition"
+                        onClick={() => {clickSound.current?.play(); setPage((prev) => prev + 1);}}
+                        className="mt-6 px-4 py-2 bg-black text-white w-full rounded hover:bg-gray-700 transition cursor-pointer"
                       >
                         Load More
                       </button>

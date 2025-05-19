@@ -18,6 +18,7 @@ type SearchBarProps = {
   setloading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export default function SearchBar({ setmove, setloading }: SearchBarProps) {
+  const clickSound = useRef<HTMLAudioElement | null>(null);
   const [value, setValue] = useState("");
   const [moves, setMoves] = useState([]);
   const [showDropdown, setShowDropDown] = useState(false);
@@ -31,6 +32,7 @@ export default function SearchBar({ setmove, setloading }: SearchBarProps) {
     }
   };
   const onSearch = async (value: string) => {
+    clickSound.current?.play();
     value = value.toLowerCase();
     if (!value) {
       setloading(true);
@@ -107,7 +109,8 @@ export default function SearchBar({ setmove, setloading }: SearchBarProps) {
     setShowDropDown(false);
   };
   return (
-    <>
+    <> 
+      <audio ref={clickSound} src="/mouseclick.mp3" preload="auto"></audio>
       <div className="flex items-center">
         <input
           ref={inputRef}
