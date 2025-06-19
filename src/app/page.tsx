@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
+import AdBanner from "./AdBanner";
 
 interface PokemonMove {
   id: number;
@@ -130,6 +131,14 @@ export default function Home() {
       <img className="cursor-pointer  fixed bottom-10 right-10 hidden md:block" src={isPlaying ? "/pokemonsing.gif" : "/pokemonsing.png"} onClick={()=>playMusic()} alt="" />
       <audio ref={musicpokemonSound} src="/pokemonmusic.mp3" loop preload="auto"></audio>
       <audio ref={clickSound} src="/mouseclick.mp3" preload="auto"></audio>
+      <div>
+        <div className="fixed top-20 right-5 hidden 2xl:block">
+          <AdBanner dataAdFormat="auto" dataFullWidthResponsive={true} dataAdSlot="9595992212"/>
+        </div>
+        <div className="fixed top-20 left-5 hidden 2xl:block">
+          <AdBanner dataAdFormat="auto" dataFullWidthResponsive={true} dataAdSlot="9595992212"/>
+        </div>
+      </div>
       <Card className="w-full max-w-5xl shadow-sm bg-white">
         <div className="p-6">
           <>
